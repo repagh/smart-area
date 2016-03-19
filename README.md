@@ -208,6 +208,13 @@ If you want to have the textarea autogrow as user types I recommend using `smart
 </textarea>
 ```
 
+## This modification
+
+This fork is a hack, using adding a list cssclass to the configuration
+object. Classess in this list are added to the fake area. A number of
+direct copies of properties are removed. 
+
+RvP
 -----------
 *By [Alejandro U. Alvarez](http://urbanoalvarez.es) - AGPLv3 License*
 
