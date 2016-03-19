@@ -9,7 +9,7 @@
  */
 
 angular.module('smartArea', [])
-    .directive('smartArea', ['$compile', function($compile) {
+    .directive('smartArea', function($compile) {
     return {
         restrict: 'A',
         scope: {
@@ -28,30 +28,30 @@ angular.module('smartArea', [])
             // Properties to be copied over from the textarea
             var properties = [
                 'direction',  // RTL support
-                'boxSizing',
-                'width',  // on Chrome and IE, exclude the scrollbar, so the mirror div wraps exactly as the textarea does
+              //  'boxSizing',
+                //'width',  // on Chrome and IE, exclude the scrollbar, so the mirror div wraps exactly as the textarea does
                 'overflowX',
                 'overflowY',  // copy the scrollbar for IE
-                'color',
-                'height',
+            //    'color',
+                //'height',
 
-                'borderTopWidth',
-                'borderRightWidth',
-                'borderBottomWidth',
-                'borderLeftWidth',
+              //  'borderTopWidth',
+            //    'borderRightWidth',
+            //    'borderBottomWidth',
+            //    'borderLeftWidth',
 
-                'borderTopColor',
-                'borderRightColor',
-                'borderBottomColor',
-                'borderLeftColor',
+            //    'borderTopColor',
+              //  'borderRightColor',
+                //'borderBottomColor',
+                //'borderLeftColor',
 
-                'borderTopStyle',
-                'borderRightStyle',
-                'borderBottomStyle',
-                'borderLeftStyle',
-                'borderRadius',
+               // 'borderTopStyle',
+            ///    'borderRightStyle',
+               // 'borderBottomStyle',
+            //    'borderLeftStyle',
+              //  'borderRadius',
 
-                'backgroundColor',
+            //    'backgroundColor',
 
                 'paddingTop',
                 'paddingRight',
@@ -59,9 +59,9 @@ angular.module('smartArea', [])
                 'paddingLeft',
 
                 // https://developer.mozilla.org/en-US/docs/Web/CSS/font
-                'fontStyle',
-                'fontVariant',
-                'fontWeight',
+            //    'fontStyle',
+              //  'fontVariant',
+            /*    'fontWeight',
                 'fontStretch',
                 'fontSize',
                 'fontSizeAdjust',
@@ -72,7 +72,7 @@ angular.module('smartArea', [])
                 'textTransform',
                 'textIndent',
                 'textDecoration',  // might not make a difference, but better be safe
-
+*/
                 'letterSpacing',
                 'wordSpacing',
                 'whiteSpace',
@@ -86,6 +86,11 @@ angular.module('smartArea', [])
 
             scope.fakeAreaElement = angular.element($compile('<div class="sa-fakeArea" ng-trim="false" ng-bind-html="fakeArea"></div>')(scope))
                 .appendTo(mainWrap);
+            if (typeof(scope.areaConfig.cssclass) != 'undefined' && scope.areaConfig.cssclass.length > 0) {
+                scope.areaConfig.cssclass.forEach( function(cls) {
+                    scope.fakeAreaElement.addClass(cls)
+                } );
+            }
 
             scope.dropdown.element = angular.element($compile('<div class="sa-dropdown" ng-show="dropdown.content.length > 0"><input type="text" class="form-control" ng-show="dropdown.showFilter"/><ul class="dropdown-menu" role="menu" style="position:static"><li ng-repeat="element in dropdown.content" role="presentation"><a href="" role="menuitem" ng-click="dropdown.selected(element)" ng-class="{active: $index == dropdown.current}" ng-bind-html="element.display"></a></li></ul></div>')(scope))
                 .appendTo(mainWrap);
@@ -98,11 +103,11 @@ angular.module('smartArea', [])
             scope.fakeAreaElement.css('wordWrap', 'break-word');
 
             // Transfer the element's properties to the div
-            properties.forEach(function (prop) {
+           properties.forEach(function (prop) {
                 scope.fakeAreaElement.css(prop, textArea.css(prop));
             });
 
-            scope.fakeAreaElement.css('width',(parseInt(textArea.outerWidth()) + 1) + 'px');
+            //scope.fakeAreaElement.css('width',(parseInt(textArea.outerWidth()) + 1) + 'px');
 
             // Special considerations for Firefox
 //            if (isFirefox) {
@@ -118,9 +123,10 @@ angular.module('smartArea', [])
             textArea.appendTo(mainWrap).addClass('sa-realArea').attr('ng-trim',false);
             $compile(textArea);
 
-            // Dirty hack to maintain the height
+            // Dirty hack to maintain the height and width
             textArea.on('keyup', function(){
                 scope.fakeAreaElement.height(textArea.height());
+                scope.fakeAreaElement.width(textArea.width());
             });
 
             return mainWrap;
@@ -370,7 +376,6 @@ angular.module('smartArea', [])
                         // I need to get the index of the last match
                         var searchable = text.substr(0, position),
                             match, found = false, lastPosition = -1;
-			element.trigger.lastIndex = 0;
                         while ((match = element.trigger.exec(searchable)) !== null){
                             if(match.index === lastPosition){
                                 break;
@@ -483,4 +488,4 @@ angular.module('smartArea', [])
             });
         }]
     };
-}]);
+});
